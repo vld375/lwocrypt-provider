@@ -4,18 +4,18 @@ rv=0
 
 provider2openssl() {
     echo
-    echo "Testing oqsprovider->oqs-openssl interop for $1:"
-    $OQS_PROVIDER_TESTSCRIPTS/oqsprovider-certgen.sh $1 && $OQS_PROVIDER_TESTSCRIPTS/oqsprovider-cmssign.sh $1 sha3-384 && $OQS_PROVIDER_TESTSCRIPTS/oqs-openssl-certverify.sh $1 && $OQS_PROVIDER_TESTSCRIPTS/oqs-openssl-cmsverify.sh $1
+    echo "Testing lwocryptprovider->lwocrypt-openssl interop for $1:"
+    $LWOCRYPT_PROVIDER_TESTSCRIPTS/lwocryptprovider-certgen.sh $1 && $LWOCRYPT_PROVIDER_TESTSCRIPTS/lwocryptprovider-cmssign.sh $1 sha3-384 && $LWOCRYPT_PROVIDER_TESTSCRIPTS/lwocrypt-openssl-certverify.sh $1 && $LWOCRYPT_PROVIDER_TESTSCRIPTS/lwocrypt-openssl-cmsverify.sh $1
 }
 
 openssl2provider() {
     echo
-    echo "Testing oqs-openssl->oqsprovider interop for $1:"
-    $OQS_PROVIDER_TESTSCRIPTS/oqs-openssl-certgen.sh $1 && $OQS_PROVIDER_TESTSCRIPTS/oqs-openssl-cmssign.sh $1 && $OQS_PROVIDER_TESTSCRIPTS/oqsprovider-certverify.sh $1 && $OQS_PROVIDER_TESTSCRIPTS/oqsprovider-cmsverify.sh $1
+    echo "Testing lwocrypt-openssl->lwocryptprovider interop for $1:"
+    $LWOCRYPT_PROVIDER_TESTSCRIPTS/lwocrypt-openssl-certgen.sh $1 && $LWOCRYPT_PROVIDER_TESTSCRIPTS/lwocrypt-openssl-cmssign.sh $1 && $LWOCRYPT_PROVIDER_TESTSCRIPTS/lwocryptprovider-certverify.sh $1 && $LWOCRYPT_PROVIDER_TESTSCRIPTS/lwocryptprovider-cmsverify.sh $1
 }
 
 localalgtest() {
-    $OQS_PROVIDER_TESTSCRIPTS/oqsprovider-certgen.sh $1 >> interop.log 2>&1 && $OQS_PROVIDER_TESTSCRIPTS/oqsprovider-certverify.sh $1 >> interop.log 2>&1 && $OQS_PROVIDER_TESTSCRIPTS/oqsprovider-cmssign.sh $1 >> interop.log 2>&1 &&  $OQS_PROVIDER_TESTSCRIPTS/oqsprovider-ca.sh $1 >> interop.log 2>&1
+    $LWOCRYPT_PROVIDER_TESTSCRIPTS/lwocryptprovider-certgen.sh $1 >> interop.log 2>&1 && $LWOCRYPT_PROVIDER_TESTSCRIPTS/lwocryptprovider-certverify.sh $1 >> interop.log 2>&1 && $LWOCRYPT_PROVIDER_TESTSCRIPTS/lwocryptprovider-cmssign.sh $1 >> interop.log 2>&1 &&  $LWOCRYPT_PROVIDER_TESTSCRIPTS/lwocryptprovider-ca.sh $1 >> interop.log 2>&1
     if [ $? -ne 0 ]; then
         echo "localalgtest $1 failed. Exiting.".
         cat interop.log
@@ -26,8 +26,8 @@ localalgtest() {
 interop() {
     echo ".\c"
     # check if we want to run this algorithm:
-    if [ ! -z "$OQS_SKIP_TESTS" ]; then
-        GREPTEST=$(echo $OQS_SKIP_TESTS | sed "s/\,/\\\|/g")
+    if [ ! -z "$LWOCRYPT_SKIP_TESTS" ]; then
+        GREPTEST=$(echo $LWOCRYPT_SKIP_TESTS | sed "s/\,/\\\|/g")
         if echo $1 | grep -q "$GREPTEST"; then
             echo "Not testing $1" >> interop.log
             return
@@ -54,8 +54,8 @@ interop() {
     fi
 }
 
-if [ -z "$OQS_PROVIDER_TESTSCRIPTS" ]; then
-    export OQS_PROVIDER_TESTSCRIPTS=$(pwd)/scripts
+if [ -z "$LWOCRYPT_PROVIDER_TESTSCRIPTS" ]; then
+    export LWOCRYPT_PROVIDER_TESTSCRIPTS=$(pwd)/scripts
 fi
 
 if [ ! -z "$OPENSSL_INSTALL" ]; then
@@ -101,8 +101,8 @@ if [ -z "$LD_LIBRARY_PATH" ]; then
     fi
 fi
 
-if [ ! -z "$OQS_SKIP_TESTS" ]; then
-   echo "Skipping algs $OQS_SKIP_TESTS"
+if [ ! -z "$LWOCRYPT_SKIP_TESTS" ]; then
+   echo "Skipping algs $LWOCRYPT_SKIP_TESTS"
 fi
 
 # Set OSX DYLD_LIBRARY_PATH if not already externally set
@@ -122,12 +122,12 @@ fi
 # check if we can use docker or not:
 docker info 2>&1 | grep Server > /dev/null
 if [ $? -ne 0 ]; then
-   echo "No OQS-OpenSSL111 interop test because of absence of docker"
+   echo "No LWOCRYPT-OpenSSL111 interop test because of absence of docker"
    export LOCALTESTONLY="Yes"
 fi
 
 # by default, do not run interop tests as per 
-# https://github.com/open-quantum-safe/oqs-provider/issues/32
+# https://github.com/open-quantum-safe/lwocrypt-provider/issues/32
 # comment the following line if they should be run; be sure to
 # have alignment in algorithms supported in that case
 export LOCALTESTONLY="Yes"
@@ -148,10 +148,10 @@ if [ $? -ne 0 ]; then
    exit 1
 fi
 
-# Ensure "oqsprovider" is registered:
-$OPENSSL_APP list -providers -verbose | grep oqsprovider > /dev/null
+# Ensure "lwocryptprovider" is registered:
+$OPENSSL_APP list -providers -verbose | grep lwocryptprovider > /dev/null
 if [ $? -ne 0 ]; then
-   echo "oqsprovider not registered. Exit test."
+   echo "lwocryptprovider not registered. Exit test."
    exit 1
 fi
 
@@ -159,10 +159,10 @@ fi
 # cleanup log from previous runs:
 rm -f interop.log
 
-echo "Cert gen/verify, CMS sign/verify, CA tests for all enabled OQS signature algorithms commencing: "
+echo "Cert gen/verify, CMS sign/verify, CA tests for all enabled LWOCRYPT signature algorithms commencing: "
 
 # auto-detect all available signature algorithms:
-for alg in `$OPENSSL_APP list -signature-algorithms | grep oqsprovider | sed -e "s/ @ .*//g" | sed -e "s/^  //g"`
+for alg in `$OPENSSL_APP list -signature-algorithms | grep lwocryptprovider | sed -e "s/ @ .*//g" | sed -e "s/^  //g"`
 do 
    if [ "$1" = "-V" ]; then
       echo "Testing $alg"
@@ -172,7 +172,7 @@ do
 done
 
 if [ -z $certsgenerated ]; then
-   echo "No OQS signature algorithms found in provider 'oqsprovider'. No certs generated. Exiting."
+   echo "No LWOCRYPT signature algorithms found in provider 'lwocryptprovider'. No certs generated. Exiting."
    exit 1
 else
    if [ "$1" = "-V" ]; then
@@ -200,7 +200,7 @@ echo
 if [ $rv -ne 0 ]; then
    echo "Tests failed."
 else
-   echo "All oqsprovider tests passed."
+   echo "All lwocryptprovider tests passed."
 fi
 exit $rv
 

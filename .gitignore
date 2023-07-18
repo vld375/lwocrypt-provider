@@ -1,8 +1,8 @@
 # checked out OSSL variants
 openssl*/* 
 openssl
-# checked out liboqs
-liboqs
+# checked out liblwocrypt
+liblwocrypt
 # installed SW
 .local
 # build directory
@@ -10,9 +10,9 @@ _build
 # generated from openssl src:
 test/ssltestlib.c
 test/ssltestlib.h
-test/oqs_test_groups
+test/lwocrypt_test_groups
 # test artifacts
 tmp
 interop.log
 # pycache
-oqs-template/__pycache__
+lwocrypt-template/__pycache__

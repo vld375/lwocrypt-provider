@@ -1,8 +1,8 @@
-[![GitHub actions](https://github.com/open-quantum-safe/oqs-provider/actions/workflows/linux.yml/badge.svg)](https://github.com/open-quantum-safe/oqs-provider/actions/workflows/linux.yml)
-[![GitHub actions](https://github.com/open-quantum-safe/oqs-provider/actions/workflows/windows.yml/badge.svg)](https://github.com/open-quantum-safe/oqs-provider/actions/workflows/windows.yml)
-[![oqs-provider](https://circleci.com/gh/open-quantum-safe/oqs-provider.svg?style=svg)](https://app.circleci.com/pipelines/github/open-quantum-safe/oqs-provider)
+[![GitHub actions](https://github.com/open-quantum-safe/lwocrypt-provider/actions/workflows/linux.yml/badge.svg)](https://github.com/open-quantum-safe/lwocrypt-provider/actions/workflows/linux.yml)
+[![GitHub actions](https://github.com/open-quantum-safe/lwocrypt-provider/actions/workflows/windows.yml/badge.svg)](https://github.com/open-quantum-safe/lwocrypt-provider/actions/workflows/windows.yml)
+[![lwocrypt-provider](https://circleci.com/gh/open-quantum-safe/lwocrypt-provider.svg?style=svg)](https://app.circleci.com/pipelines/github/open-quantum-safe/lwocrypt-provider)
 
-oqsprovider - Open Quantum Safe provider for OpenSSL (3.x)
+lwocryptprovider - Open Quantum Safe provider for OpenSSL (3.x)
 ==========================================================
 
 Purpose
@@ -10,11 +10,11 @@ Purpose
 
 This repository contains code to enable quantum-safe cryptography (QSC)
 in a standard OpenSSL (3.x) distribution by way of implementing a single
-shared library, the OQS
+shared library, the LWOCRYPT
 [provider](https://www.openssl.org/docs/manmaster/man7/provider.html).
 
-This repository has been derived from the [OQS-OpenSSL3 branch in
-https://github.com/open-quantum-safe/openssl](https://github.com/open-quantum-safe/openssl/tree/OQS-OpenSSL3)
+This repository has been derived from the [LWOCRYPT-OpenSSL3 branch in
+https://github.com/open-quantum-safe/openssl](https://github.com/open-quantum-safe/openssl/tree/LWOCRYPT-OpenSSL3)
 creating a provider that can be built outside the OpenSSL source tree.
 
 Status
@@ -37,22 +37,22 @@ permits use of standards and algorithms implemented by [openssl](https://github.
 , e.g., concerning X.509, PKCS#8 or CMS.
 
 For post-quantum algorithms, the version of the cryptographic algorithm used
-depends on the version of [liboqs](https://github.com/open-quantum-safe/liboqs) used.
+depends on the version of [liblwocrypt](https://github.com/open-quantum-safe/liblwocrypt) used.
 Regarding the integration of post-quantum algorithms into higher level
 components, this provider implements the following standards:
 
 - For TLS:
   - Hybrid post-quantum / traditional key exchange:
     - The data structures used follow the Internet-Draft [Hybrid key exchange in TLS 1.3](https://datatracker.ietf.org/doc/draft-ietf-tls-hybrid-design/), namely simple concatenation of traditional and post-quantum public keys and shared secrets.
-    - The algorithm identifiers used are documented in [oqs-kem-info.md](https://github.com/open-quantum-safe/oqs-provider/blob/main/oqs-template/oqs-kem-info.md).
+    - The algorithm identifiers used are documented in [lwocrypt-kem-info.md](https://github.com/open-quantum-safe/lwocrypt-provider/blob/main/lwocrypt-template/lwocrypt-kem-info.md).
   - Hybrid post-quantum / traditional signatures in TLS:
     - For public keys and digital signatures inside X.509 certificates, see the bullet point on X.509 below.
     - For digital signatures outside X.509 certificates and in the TLS 1.3 handshake directly, the data structures used follow the same encoding format as that used for X.509 certificates, namely simple concatenation of traditional and post-quantum signatures.
-    - The algorithm identifiers used are documented in [oqs-sig-info.md](https://github.com/open-quantum-safe/oqs-provider/blob/main/oqs-template/oqs-sig-info.md).
+    - The algorithm identifiers used are documented in [lwocrypt-sig-info.md](https://github.com/open-quantum-safe/lwocrypt-provider/blob/main/lwocrypt-template/lwocrypt-sig-info.md).
 - For X.509:
   - Hybrid post-quantum / traditional public keys and signatures:
     - The data structures used follow the Internet-Draft [Internet X.509 Public Key Infrastructure: Algorithm Identifiers for Dilithium](https://datatracker.ietf.org/doc/draft-ietf-lamps-dilithium-certificates/), namely simple concatenation of traditional and post-quantum components in plain binary / OCTET_STRING representations.
-    - The algorithm identifiers (OIDs) used are documented in [oqs-sig-info.md](https://github.com/open-quantum-safe/oqs-provider/blob/main/oqs-template/oqs-sig-info.md).
+    - The algorithm identifiers (OIDs) used are documented in [lwocrypt-sig-info.md](https://github.com/open-quantum-safe/lwocrypt-provider/blob/main/lwocrypt-template/lwocrypt-sig-info.md).
 - For PKCS#8:
   - Hybrid post-quantum / traditional private keys:
     - Simple concatenation of traditional and post-quantum components in plain binary / OCTET_STRING representations.
@@ -64,7 +64,7 @@ Algorithms
 
 This implementation makes available the following quantum safe algorithms:
 
-<!--- OQS_TEMPLATE_FRAGMENT_ALGS_START -->
+<!--- LWOCRYPT_TEMPLATE_FRAGMENT_ALGS_START -->
 ### KEM algorithms
 
 - **BIKE**: `bikel1`, `p256_bikel1`, `x25519_bikel1`, `bikel3`, `p384_bikel3`, `x448_bikel3`, `bikel5`, `p521_bikel5`
@@ -80,23 +80,23 @@ This implementation makes available the following quantum safe algorithms:
 - **SPHINCS-SHA2**:`sphincssha2128fsimple`\*, `p256_sphincssha2128fsimple`\*, `rsa3072_sphincssha2128fsimple`\*, `sphincssha2128ssimple`\*, `p256_sphincssha2128ssimple`\*, `rsa3072_sphincssha2128ssimple`\*, `sphincssha2192fsimple`\*, `p384_sphincssha2192fsimple`\*, `sphincssha2192ssimple`, `p384_sphincssha2192ssimple`, `sphincssha2256fsimple`, `p521_sphincssha2256fsimple`, `sphincssha2256ssimple`, `p521_sphincssha2256ssimple`
 - **SPHINCS-SHAKE**:`sphincsshake128fsimple`\*, `p256_sphincsshake128fsimple`\*, `rsa3072_sphincsshake128fsimple`\*, `sphincsshake128ssimple`, `p256_sphincsshake128ssimple`, `rsa3072_sphincsshake128ssimple`, `sphincsshake192fsimple`, `p384_sphincsshake192fsimple`, `sphincsshake192ssimple`, `p384_sphincsshake192ssimple`, `sphincsshake256fsimple`, `p521_sphincsshake256fsimple`, `sphincsshake256ssimple`, `p521_sphincsshake256ssimple`
 
-<!--- OQS_TEMPLATE_FRAGMENT_ALGS_END -->
+<!--- LWOCRYPT_TEMPLATE_FRAGMENT_ALGS_END -->
 
-As the underlying [liboqs](https://github.com/open-quantum-safe/liboqs)
+As the underlying [liblwocrypt](https://github.com/open-quantum-safe/liblwocrypt)
 at build time may be configured to not enable all algorithms, it is
 advisable to check the possible subset of algorithms actually enabled
 via the standard commands, i.e.,
-`openssl list -signature-algorithms -provider oqsprovider` and
-`openssl list -kem-algorithms -provider oqsprovider`.
+`openssl list -signature-algorithms -provider lwocryptprovider` and
+`openssl list -kem-algorithms -provider lwocryptprovider`.
 
 In addition, algorithms not denoted with "\*" above are not enabled for
 TLS operations. This designation can be changed by modifying the
-"enabled" flags in the main [algorithm configuration file](oqs-template/generate.yml)
-and re-running the generator script `python3 oqs-template/generate.py`.
+"enabled" flags in the main [algorithm configuration file](lwocrypt-template/generate.yml)
+and re-running the generator script `python3 lwocrypt-template/generate.py`.
 
 It is possible to select only algorithms of a specific bit strength by using
-the openssl property selection mechanism on the key "oqsprovider.security_bits",
-e.g., as such: `openssl list -kem-algorithms -propquery oqsprovider.security_bits=256`.
+the openssl property selection mechanism on the key "lwocryptprovider.security_bits",
+e.g., as such: `openssl list -kem-algorithms -propquery lwocryptprovider.security_bits=256`.
 The bit strength of hybrid algorithms is always defined by the bit strength
 of the classic algorithm.
 
@@ -108,10 +108,10 @@ classic algorithm, e.g., for elliptic curve: "p256_".
 A full list of algorithms, their interoperability code points and OIDs as well
 as a method to dynamically adapt them are documented in [ALGORITHMS.md](ALGORITHMS.md).
 
-*Note:* `oqsprovider` depends for TLS session setup and hybrid operations
+*Note:* `lwocryptprovider` depends for TLS session setup and hybrid operations
 on OpenSSL providers for classic crypto operations. Therefore it is essential
 that a provider such as `default` or `fips` is configured to be active. See
-`tests/oqs.cnf` or `scripts/openssl-ca.cnf` for examples.
+`tests/lwocrypt.cnf` or `scripts/openssl-ca.cnf` for examples.
 
 Building and testing -- Quick start
 -----------------------------------
@@ -134,7 +134,7 @@ Building and testing
 
 ## Pre-requisites
 
-To be able to build `oqsprovider`, OpenSSL 3.0 and liboqs need to be installed.
+To be able to build `lwocryptprovider`, OpenSSL 3.0 and liblwocrypt need to be installed.
 It's not important where they are installed, just that they are.
 
 For building, minimum requirements are a C compiler, git access and `cmake`.
@@ -155,21 +155,21 @@ and installing the latest/`master` branch of OpenSSL 3 in `.local`:
 For [OpenSSL implementation limitations, e.g., regarding provider feature usage and support,
 see here](https://wiki.openssl.org/index.php/OpenSSL_3.0#STATUS_of_current_development).
 
-### liboqs
+### liblwocrypt
 
-Example for building and installing liboqs in `.local`:
+Example for building and installing liblwocrypt in `.local`:
 
-    git clone https://github.com/open-quantum-safe/liboqs.git
-    cd liboqs
+    git clone https://github.com/open-quantum-safe/liblwocrypt.git
+    cd liblwocrypt
     cmake -DCMAKE_INSTALL_PREFIX=$(pwd)/../.local -S . -B _build
     cmake --build _build && cmake --install _build
     cd ..
 
-Further `liboqs` build options are [documented here](https://github.com/open-quantum-safe/liboqs/wiki/Customizing-liboqs).
+Further `liblwocrypt` build options are [documented here](https://github.com/open-quantum-safe/liblwocrypt/wiki/Customizing-liblwocrypt).
 
 ## Building the provider (UNIX - Linux - OSX)
 
-`oqsprovider` using the local OpenSSL3 build as done above can be built for example via the following:
+`lwocryptprovider` using the local OpenSSL3 build as done above can be built for example via the following:
 
     cmake -DOPENSSL_ROOT_DIR=$(pwd)/.local -DCMAKE_PREFIX_PATH=$(pwd)/.local -S . -B _build
     cmake --build _build
@@ -182,8 +182,8 @@ Core component testing can be run via the common `cmake` command:
 
 Add `-V` to the `ctest` command for verbose output.
 
-Additional interoperability tests (with OQS-OpenSSL1.1.1) are available in the
-script `scripts/runtests.sh` but are disabled by default as oqs-openssl111 has
+Additional interoperability tests (with LWOCRYPT-OpenSSL1.1.1) are available in the
+script `scripts/runtests.sh` but are disabled by default as lwocrypt-openssl111 has
 a smaller set of algorithms and features supported.
 
 ## Packaging
@@ -194,18 +194,18 @@ The resultant file can be installed as usual via `dpkg -i ...`.
 
 ## Installing the provider
 
-`oqsprovider` can be installed using the common `cmake` command
+`lwocryptprovider` can be installed using the common `cmake` command
 
     cmake --install _build
 
-If it is desired to activate `oqsprovider` by default in the system `openssl.cnf`
+If it is desired to activate `lwocryptprovider` by default in the system `openssl.cnf`
 file, amend the "[provider_sect]" as follows:
 
 ```
 [provider_sect]
 default = default_sect
-oqsprovider = oqsprovider_sect
-[oqsprovider_sect]
+lwocryptprovider = lwocryptprovider_sect
+[lwocryptprovider_sect]
 activate = 1
 ```
 
@@ -214,7 +214,7 @@ This file is typically located at (operating system dependent):
 - /opt/homebrew/etc/openssl@3/openssl.cnf (OSX Homebrew)
 - C:\Program Files\Common Files\SSL\openssl.cnf (Windows)
 
-Doing this will enable `oqsprovider` to be seamlessly used alongside the other
+Doing this will enable `lwocryptprovider` to be seamlessly used alongside the other
 `openssl` providers. If successfully done, running, e.g., `openssl list -providers`
 should output something along these lines (version IDs variable of course):
 
@@ -224,8 +224,8 @@ providers:
     name: OpenSSL Default Provider
     version: 3.1.1
     status: active
-  oqsprovider
-    name: OpenSSL OQS Provider
+  lwocryptprovider
+    name: OpenSSL LWOCRYPT Provider
     version: 0.5.0
     status: active
 ```
@@ -238,12 +238,12 @@ of classical crypto algorithms.
 
 ### Size optimizations
 
-In order to reduce the size of the oqsprovider, it is possible to limit the number
+In order to reduce the size of the lwocryptprovider, it is possible to limit the number
 of algorithms supported, e.g., to the set of NIST standardized algorithms. This is
-facilitated by setting the `liboqs` build option `-DOQS_ALGS_ENABLED=STD`.
+facilitated by setting the `liblwocrypt` build option `-DLWOCRYPT_ALGS_ENABLED=STD`.
 
-Another option to reduce the size of `oqsprovider` is to have it rely on a
-separate installation of `liboqs` (as a shared library). For such deployment be
+Another option to reduce the size of `lwocryptprovider` is to have it rely on a
+separate installation of `liblwocrypt` (as a shared library). For such deployment be
 sure to specify the standard [BUILD_SHARED_LIBS](https://cmake.org/cmake/help/latest/variable/BUILD_SHARED_LIBS.html)
 option of `cmake`.
 
@@ -255,24 +255,24 @@ enabling the usual `ninja`, `ninja test`, or `ninja package` commands.
 ### NDEBUG
 
 By adding the standard CMake option `-DCMAKE_BUILD_TYPE=Release` to the
-`oqsprovider` build command, debugging output is disabled.
+`lwocryptprovider` build command, debugging output is disabled.
 
-### OQS_SKIP_TESTS
+### LWOCRYPT_SKIP_TESTS
 
 By setting this environment variable, testing of specific
 algorithm families as listed [here](https://github.com/open-quantum-safe/openssl#supported-algorithms)
 can be disabled in testing. For example
 
-    OQS_SKIP_TESTS="sphincs" ./scripts/runtests.sh
+    LWOCRYPT_SKIP_TESTS="sphincs" ./scripts/runtests.sh
 
 excludes all algorithms of the "Sphincs" family (speeding up testing significantly).
 
-*Note*: By default, interoperability testing with oqs-openssl111 is no longer
+*Note*: By default, interoperability testing with lwocrypt-openssl111 is no longer
 performed by default but can be manually enabled in the script `scripts/runtests.sh`.
 
 ### Key Encoding
 
-By setting `-DUSE_ENCODING_LIB=<ON/OFF>` at compile-time, oqs-provider can be
+By setting `-DUSE_ENCODING_LIB=<ON/OFF>` at compile-time, lwocrypt-provider can be
 compiled with with an an external encoding library `qsc-key-encoder`.
 Configuring the encodings is done via environment as described in [ALGORITHMS.md](ALGORITHMS.md).
 The default value is `OFF`.
@@ -283,21 +283,21 @@ structure. The default value is `OFF`.
 
 Building on Windows
 --------------------
-Building `oqsprovider` following the steps outlined above have been
+Building `lwocryptprovider` following the steps outlined above have been
 successfully tested on Windows 10 and 11 using MSYS2 MINGW64.
-For building `oqsprovider` successfully using Microsoft Visual Studio
+For building `lwocryptprovider` successfully using Microsoft Visual Studio
 or `cygwin`, please check out the build instructions for those platforms
 in the CI control file at ".github/workflows/windows.yml".
 
 Using
 -----
 
-In order to exercise the `oqsprovider`, it needs to be explicitly activated.
+In order to exercise the `lwocryptprovider`, it needs to be explicitly activated.
 One way to do this is to enable it in the OpenSSL config file. Detailed
 explanations can be found for example
 [here](https://wiki.openssl.org/index.php/OpenSSL_3.0#Providers).
 
-An example file activating `oqsprovider` by default is `scripts/openssl-ca.cnf`.
+An example file activating `lwocryptprovider` by default is `scripts/openssl-ca.cnf`.
 This can be activated for example by setting the standard OpenSSl environment
 variable "OPENSSL_CONF" to this file before using `openssl`, e.g. in UNIX notation:
 
@@ -311,9 +311,9 @@ eliminates the need for specific PATH setting as showcased below.
 
 ## Checking provider version information
 
-    LD_LIBRARY_PATH=.local/lib64 .local/bin/openssl list -providers -verbose -provider-path _build/lib -provider oqsprovider 
+    LD_LIBRARY_PATH=.local/lib64 .local/bin/openssl list -providers -verbose -provider-path _build/lib -provider lwocryptprovider 
 
-If using a standard install of openssl(3) and including `oqsprovider` activation
+If using a standard install of openssl(3) and including `lwocryptprovider` activation
 in the global "openssl.cnf" file, the command accordingly gets simplified to:
 
     openssl list -providers -verbose
@@ -336,13 +336,13 @@ signature algorithms [listed above](#signature-algorithms).
 A simple server utilizing PQ/quantum-safe KEM algorithms and classic RSA
 certicates can be set up for example by running
 
-    LD_LIBRARY_PATH=.local/lib64 .local/bin/openssl s_server -cert rsa_srv.crt -key rsa_srv.key -www -tls1_3 -groups kyber768:frodo640shake -provider-path _build/lib  -provider default -provider oqsprovider
+    LD_LIBRARY_PATH=.local/lib64 .local/bin/openssl s_server -cert rsa_srv.crt -key rsa_srv.key -www -tls1_3 -groups kyber768:frodo640shake -provider-path _build/lib  -provider default -provider lwocryptprovider
 
 ## Running a client to interact with (quantum-safe) KEM algorithms
 
 This can be facilitated for example by running
 
-    LD_LIBRARY_PATH=.local/lib64 .local/bin/openssl s_client -groups frodo640shake -provider-path _build/lib  -provider default -provider oqsprovider
+    LD_LIBRARY_PATH=.local/lib64 .local/bin/openssl s_client -groups frodo640shake -provider-path _build/lib  -provider default -provider lwocryptprovider
 
 By issuing the command `GET /` the quantum-safe crypto enabled OpenSSL3
 server returns details about the established connection.
@@ -362,7 +362,7 @@ certificate (and its signature algorithm) to create the signed data:
 
 Step 1: Create quantum-safe key pair and self-signed certificate:
 
-    LD_LIBRARY_PATH=.local/lib64 .local/bin/openssl req -x509 -new -newkey dilithium3 -keyout qsc.key -out qsc.crt -nodes -subj "/CN=oqstest" -days 365 -config openssl/apps/openssl.cnf -provider-path _build/lib -provider oqsprovider -provider default
+    LD_LIBRARY_PATH=.local/lib64 .local/bin/openssl req -x509 -new -newkey dilithium3 -keyout qsc.key -out qsc.crt -nodes -subj "/CN=lwocrypttest" -days 365 -config openssl/apps/openssl.cnf -provider-path _build/lib -provider lwocryptprovider -provider default
 
 By changing the `-newkey` parameter algorithm name [any of the 
 supported quantum-safe or hybrid algorithms](#signature-algorithms)
@@ -376,7 +376,7 @@ requires the presence of a digest algorithm, while quantum-safe crypto
 does not, in difference to the QSC certificate creation command above,
 passing a message digest algorithm via the `-md` parameter is mandatory.
 
-    LD_LIBRARY_PATH=.local/lib64 .local/bin/openssl cms -in inputfile -sign -signer qsc.crt -inkey qsc.key -nodetach -outform pem -binary -out signedfile -md sha512 -provider-path _build/lib  -provider default -provider oqsprovider
+    LD_LIBRARY_PATH=.local/lib64 .local/bin/openssl cms -in inputfile -sign -signer qsc.crt -inkey qsc.key -nodetach -outform pem -binary -out signedfile -md sha512 -provider-path _build/lib  -provider default -provider lwocryptprovider
 
 Data to be signed is to be contained in the file named `inputfile`. The
 resultant CMS output is contained in file `signedfile`. The QSC algorithm
@@ -389,11 +389,11 @@ Continuing the example above, the following command verifies the CMS file
 `signedfile` and outputs the `outputfile`. Its contents should be identical
 to the original data in `inputfile` above.
 
-    LD_LIBRARY_PATH=.local/lib64 .local/bin/openssl cms -verify -CAfile qsc.crt -inform pem -in signedfile -crlfeol -out outputfile -provider-path _build/lib -provider oqsprovider -provider default
+    LD_LIBRARY_PATH=.local/lib64 .local/bin/openssl cms -verify -CAfile qsc.crt -inform pem -in signedfile -crlfeol -out outputfile -provider-path _build/lib -provider lwocryptprovider -provider default
 
 Note that it is also possible to build proper QSC certificate chains
 using the standard OpenSSL calls. For sample code see
-[scripts/oqsprovider-certgen.sh](scripts/oqsprovider-certgen.sh).
+[scripts/lwocryptprovider-certgen.sh](scripts/lwocryptprovider-certgen.sh).
 
 ### Support of `dgst` (and sign)
 
@@ -402,21 +402,21 @@ command. Sample invocations building on the keys and certificate files in the ex
 
 #### Signing
 
-    LD_LIBRARY_PATH=.local/lib64 .local/bin/openssl dgst -provider-path _build/lib -provider oqsprovider -provider default -sign qsc.key -out dgstsignfile inputfile
+    LD_LIBRARY_PATH=.local/lib64 .local/bin/openssl dgst -provider-path _build/lib -provider lwocryptprovider -provider default -sign qsc.key -out dgstsignfile inputfile
 
 #### Verifying
 
-    LD_LIBRARY_PATH=.local/lib64 .local/bin/openssl dgst -provider-path _build/lib -provider oqsprovider -provider default -signature dgstsignfile -verify qsc.pubkey inputfile
+    LD_LIBRARY_PATH=.local/lib64 .local/bin/openssl dgst -provider-path _build/lib -provider lwocryptprovider -provider default -signature dgstsignfile -verify qsc.pubkey inputfile
 
 The public key can be extracted from the certificate using standard openssl command:
 
-    LD_LIBRARY_PATH=.local/lib64 .local/bin/openssl x509 -provider-path _build/lib -provider oqsprovider -provider default -in qsc.crt -pubkey -noout > qsc.pubkey
+    LD_LIBRARY_PATH=.local/lib64 .local/bin/openssl x509 -provider-path _build/lib -provider lwocryptprovider -provider default -in qsc.crt -pubkey -noout > qsc.pubkey
 
-The `dgst` command is not tested for interoperability with [oqs-openssl111](https://github.com/open-quantum-safe/openssl).
+The `dgst` command is not tested for interoperability with [lwocrypt-openssl111](https://github.com/open-quantum-safe/openssl).
 
 ### Note on randomness provider
 
-`oqsprovider` does not implement its own
+`lwocryptprovider` does not implement its own
 [DRBG](https://csrc.nist.gov/glossary/term/Deterministic_Random_Bit_Generator).
 Therefore by default it relies on OpenSSL to provide one. Thus,
 either the default or fips provider must be loaded for QSC algorithms
@@ -426,18 +426,18 @@ and/or [OpenSSL command line options](https://www.openssl.org/docs/manmaster/man
 on how to facilitate this. Or simply use the sample command
 lines documented in this README.
 
-This dependency could be eliminated by building `liboqs` without
-OpenSSL support ([OQS_USE_OPENSSL=OFF](https://github.com/open-quantum-safe/liboqs/wiki/Customizing-liboqs#OQS_USE_OPENSSL)),
-which of course would be an unusual approach for an OpenSSL-OQS provider.
+This dependency could be eliminated by building `liblwocrypt` without
+OpenSSL support ([LWOCRYPT_USE_OPENSSL=OFF](https://github.com/open-quantum-safe/liblwocrypt/wiki/Customizing-liblwocrypt#LWOCRYPT_USE_OPENSSL)),
+which of course would be an unusual approach for an OpenSSL-LWOCRYPT provider.
 
 ### Note on KEM Decapsulation API
 
-The OpenSSL [`EVP_PKEY_decapsulate` API](https://www.openssl.org/docs/manmaster/man3/EVP_PKEY_decapsulate.html) specifies an explicit return value for failure. For security reasons, most KEM algorithms available from liboqs do not return an error code if decapsulation failed. Successful decapsulation can instead be implicitly verified by comparing the original and the decapsulated message.
+The OpenSSL [`EVP_PKEY_decapsulate` API](https://www.openssl.org/docs/manmaster/man3/EVP_PKEY_decapsulate.html) specifies an explicit return value for failure. For security reasons, most KEM algorithms available from liblwocrypt do not return an error code if decapsulation failed. Successful decapsulation can instead be implicitly verified by comparing the original and the decapsulated message.
 
 Note on OpenSSL versions
 ------------------------
 
-`oqsprovider` is written to ensure building on all versions of OpenSSL
+`lwocryptprovider` is written to ensure building on all versions of OpenSSL
 supporting the provider concept. However, OpenSSL still is in active
 development regarding features supported via the provider interface.
 Therefore some functionalities documented above are only supported
@@ -458,30 +458,30 @@ After https://github.com/openssl/openssl/pull/19312 landed, (also PQ) signature
 algorithms are working in TLS1.3 (handshaking); after https://github.com/openssl/openssl/pull/20486
 has landed, also algorithms with very long signatures are supported.
 
-liboqs dependency
+liblwocrypt dependency
 -----------------
 
-As `oqsprovider` is dependent on `liboqs` for the implementation of the PQ algorithms
-there is a mechanism to adapt the functionality of a specific `liboqs` version to the
-current `oqsprovider` version: The use of the code generator script `oqs-template/generate.py`
-which in turn is driven by any of the `liboqs` release-specific `oqs-template/generate.yml[-release]`
+As `lwocryptprovider` is dependent on `liblwocrypt` for the implementation of the PQ algorithms
+there is a mechanism to adapt the functionality of a specific `liblwocrypt` version to the
+current `lwocryptprovider` version: The use of the code generator script `lwocrypt-template/generate.py`
+which in turn is driven by any of the `liblwocrypt` release-specific `lwocrypt-template/generate.yml[-release]`
 files. The same file(s) also define the (default) TLS IDs of all algorithms included and
 therefore represent the interoperability level at a specific point in time (of development
-of `oqsprovider` and `liboqs`).
+of `lwocryptprovider` and `liblwocrypt`).
 
-By default, `oqsprovider` always uses the most current version of `liboqs` code, but by
-setting the environment variable "LIBOQS_BRANCH" when running the `scripts/fullbuild.sh`
-script, code will be generated to utilize a specific, supported `liboqs` release. The
+By default, `lwocryptprovider` always uses the most current version of `liblwocrypt` code, but by
+setting the environment variable "LIBLWOCRYPT_BRANCH" when running the `scripts/fullbuild.sh`
+script, code will be generated to utilize a specific, supported `liblwocrypt` release. The
 script `scripts/revertmain.sh` can be used to revert all code back to the default,
 `main`-branch tracking strategy. This can be used, for example, to facilitate a release
-of `oqsprovider` to track an old `liboqs` release.
+of `lwocryptprovider` to track an old `liblwocrypt` release.
 
 Team
 ----
 
 The Open Quantum Safe project is led by [Douglas Stebila](https://www.douglas.stebila.ca/research/) and [Michele Mosca](http://faculty.iqc.uwaterloo.ca/mmosca/) at the University of Waterloo.
 
-Contributors to the `oqsprovider` include:
+Contributors to the `lwocryptprovider` include:
 
 - Michael Baentsch
 - Christian Paquin
@@ -494,7 +494,7 @@ Contributors to the `oqsprovider` include:
 Acknowledgments
 ---------------
 
-The `oqsprovider` project is supported through the [NGI Assure Fund](https://nlnet.nl/assure),
+The `lwocryptprovider` project is supported through the [NGI Assure Fund](https://nlnet.nl/assure),
 a fund established by [NLnet](https://nlnet.nl) with financial
 support from the European Commission's [Next Generation Internet programme](https://www.ngi.eu),
 under the aegis of DG Communications Networks, Content and Technology
@@ -504,10 +504,10 @@ Financial support for the development of Open Quantum Safe has been provided
 by Amazon Web Services and the Tutte Institute for Mathematics and Computing.
 
 We'd like to make a special acknowledgement to the companies who have
-dedicated programmer time to contribute source code to OQS, including
+dedicated programmer time to contribute source code to LWOCRYPT, including
 Amazon Web Services, evolutionQ, Microsoft Research, Cisco Systems, and IBM Research.
 
-Research projects which developed specific components of OQS have been
+Research projects which developed specific components of LWOCRYPT have been
 supported by various research grants, including funding from the Natural
 Sciences and Engineering Research Council of Canada (NSERC); see
 [here](https://openquantumsafe.org/papers/SAC-SteMos16.pdf) and

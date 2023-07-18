@@ -33,7 +33,7 @@ char *test_mk_file_path(const char *dir, const char *file)
     return full_file;
 }
 
-static int test_oqs_groups(const char *group_name)
+static int test_lwocrypt_groups(const char *group_name)
 {
   SSL_CTX *cctx = NULL, *sctx = NULL;
   SSL *clientssl = NULL, *serverssl = NULL;
@@ -95,7 +95,7 @@ static int test_group(const OSSL_PARAM params[], void *data)
 
     char* group_name = OPENSSL_strdup(p->data);
 
-    ret = test_oqs_groups(group_name);
+    ret = test_lwocrypt_groups(group_name);
 
     if (ret >= 0) {
         fprintf(stderr,
@@ -118,7 +118,7 @@ static int test_provider_groups(OSSL_PROVIDER *provider, void *vctx)
 {
     const char* provname = OSSL_PROVIDER_get0_name(provider);
 
-    if (!strcmp(provname, PROVIDER_NAME_OQS))
+    if (!strcmp(provname, PROVIDER_NAME_LWOCRYPT))
         return OSSL_PROVIDER_get_capabilities(provider, "TLS-GROUP",
                                               test_group, vctx);
     else

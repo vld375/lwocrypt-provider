@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Use newly built oqsprovider to generate certs for alg $1
+# Use newly built lwocryptprovider to generate certs for alg $1
 
 if [ $# -ne 1 ]; then
     echo "Usage: $0 <algorithmname>. Exiting."
@@ -21,7 +21,7 @@ if [ -z "$DYLD_LIBRARY_PATH" ]; then
     export DYLD_LIBRARY_PATH=$LD_LIBRARY_PATH
 fi
 
-echo "oqsprovider-certverify.sh commencing..."
+echo "lwocryptprovider-certverify.sh commencing..."
 
 # check that CSR can be output OK
 

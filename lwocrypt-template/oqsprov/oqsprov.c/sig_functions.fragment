@@ -1,0 +1,11 @@
+{% for sig in config['sigs'] %}
+   {%- for variant in sig['variants'] %}
+#ifdef LWOCRYPT_ENABLE_SIG_{{ variant['lwocrypt_meth']|replace("LWOCRYPT_SIG_alg_","") }}
+    SIGALG("{{variant['name']}}", {{variant['security']}}, lwocrypt_signature_functions),
+      {%- for classical_alg in variant['mix_with'] %}
+    SIGALG("{{ classical_alg['name'] }}_{{variant['name']}}", {{variant['security']}}, lwocrypt_signature_functions),
+      {%- endfor %}
+#endif
+   {%- endfor %}
+{%- endfor %}
+

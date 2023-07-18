@@ -1,4 +1,4 @@
-The MIT license, the text of which is below, applies to oqs-provider in general.
+The MIT license, the text of which is below, applies to lwocrypt-provider in general.
 
 Copyright (c) 2016-2021 Open Quantum Safe project
 

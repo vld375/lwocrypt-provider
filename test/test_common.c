@@ -18,7 +18,7 @@ void hexdump(const void *ptr, size_t len)
 
 #define MIN(X, Y) (((X) < (Y)) ? (X) : (Y))
 int alg_is_enabled(const char *algname) {
-    char *alglist = getenv("OQS_SKIP_TESTS");
+    char *alglist = getenv("LWOCRYPT_SKIP_TESTS");
     char *comma = NULL;
     char totest[200];
 

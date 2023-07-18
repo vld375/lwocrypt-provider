@@ -1,0 +1,14 @@
+{% set cnt = namespace(val=-1) %}
+{%- for sig in config['sigs'] %}
+    {%- for variant in sig['variants'] %}
+    {%- set cnt.val = cnt.val + 1 %}
+#ifdef LWOCRYPT_ENABLE_SIG_{{ variant['lwocrypt_meth']|replace("LWOCRYPT_SIG_alg_","") }}
+    LWOCRYPT_SIGALG_ENTRY({{variant['name']}}, {{variant['name']}}, {{variant['name']}}, "{{ variant['oid'] }}", {{ cnt.val }}),
+        {%- for classical_alg in variant['mix_with'] %}
+    {%- set cnt.val = cnt.val + 1 %}
+    LWOCRYPT_SIGALG_ENTRY({{ classical_alg['name'] }}_{{variant['name']}}, {{ classical_alg['name'] }}_{{variant['name']}}, {{ classical_alg['name'] }}_{{variant['name']}}, "{{ classical_alg['oid'] }}", {{ cnt.val }}),
+        {%- endfor %}
+#endif
+    {%- endfor %}
+{%- endfor %}
+

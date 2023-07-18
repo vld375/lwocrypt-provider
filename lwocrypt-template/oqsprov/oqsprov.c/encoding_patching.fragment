@@ -1,0 +1,14 @@
+{% set cnt = namespace(val=-2) %}
+{%- for sig in config['sigs'] %}
+   {%- for variant in sig['variants'] %}
+      {%- set cnt.val = cnt.val + 2 %}
+   if (getenv("LWOCRYPT_ENCODING_{{variant['name']|upper}}")) lwocrypt_alg_encoding_list[{{ cnt.val }}] = getenv("LWOCRYPT_ENCODING_{{variant['name']|upper}}"); 
+   if (getenv("LWOCRYPT_ENCODING_{{variant['name']|upper}}_ALGNAME")) lwocrypt_alg_encoding_list[{{ cnt.val + 1 }}] = getenv("LWOCRYPT_ENCODING_{{variant['name']|upper}}_ALGNAME"); 
+      {%- for classical_alg in variant['mix_with'] %}
+         {%- set cnt.val = cnt.val + 2 %}
+   if (getenv("LWOCRYPT_ENCODING_{{ classical_alg['name']|upper }}_{{variant['name']|upper}}")) lwocrypt_alg_encoding_list[{{ cnt.val }}] = getenv("LWOCRYPT_ENCODING_{{ classical_alg['name']|upper }}_{{variant['name']|upper}}"); 
+   if (getenv("LWOCRYPT_ENCODING_{{ classical_alg['name']|upper }}_{{variant['name']|upper}}_ALGNAME")) lwocrypt_alg_encoding_list[{{ cnt.val + 1 }}] = getenv("LWOCRYPT_ENCODING_{{ classical_alg['name']|upper }}_{{variant['name']|upper}}_ALGNAME"); 
+      {%- endfor %}
+   {%- endfor %}
+{%- endfor %}
+

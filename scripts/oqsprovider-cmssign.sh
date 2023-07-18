@@ -1,8 +1,8 @@
 #!/bin/bash
 
-# Use newly built oqsprovider to generate CMS signed files for alg $1
+# Use newly built lwocryptprovider to generate CMS signed files for alg $1
 # Also used to test X509 pubkey extract and sign/verify using openssl dgst
-# Assumed oqsprovider-certgen.sh to have run before for same algorithm
+# Assumed lwocryptprovider-certgen.sh to have run before for same algorithm
 
 # uncomment to see what's happening:
 #set -x
@@ -12,7 +12,7 @@ if [ $# -lt 1 ]; then
     exit 1
 fi
 
-echo "oqsprovider-cmssign.sh commencing..."
+echo "lwocryptprovider-cmssign.sh commencing..."
 
 if [ $# -eq 2 ]; then
 	DGSTNAME=$2

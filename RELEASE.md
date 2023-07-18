@@ -1,23 +1,23 @@
-oqs-provider 0.5.1-dev
+lwocrypt-provider 0.5.1-dev
 ======================
 
 About
 -----
 
-The **Open Quantum Safe (OQS) project** has the goal of developing and prototyping quantum-resistant cryptography.  More information on OQS can be found on our website: https://openquantumsafe.org/ and on Github at https://github.com/open-quantum-safe/.  
+The **Open Quantum Safe (LWOCRYPT) project** has the goal of developing and prototyping quantum-resistant cryptography.  More information on LWOCRYPT can be found on our website: https://openquantumsafe.org/ and on Github at https://github.com/open-quantum-safe/.  
 
-**oqs-provider** is a standalone prototype [OpenSSL 3](https://github.com/openssl/openssl) [provider](https://www.openssl.org/docs/manmaster/man7/provider.html) enabling [liboqs](https://github.com/open-quantum-safe/liboqs)-based quantum-safe and hybrid key exchange for TLS 1.3, as well as quantum-safe and hybrid X.509 certificate generation, CMS ond dgst operations. 
+**lwocrypt-provider** is a standalone prototype [OpenSSL 3](https://github.com/openssl/openssl) [provider](https://www.openssl.org/docs/manmaster/man7/provider.html) enabling [liblwocrypt](https://github.com/open-quantum-safe/liblwocrypt)-based quantum-safe and hybrid key exchange for TLS 1.3, as well as quantum-safe and hybrid X.509 certificate generation, CMS ond dgst operations. 
 
-When deployed, the `oqs-provider` binary (shared library) thus adds support for quantum-safe cryptographic operations to any standard OpenSSL(v3) installation.
+When deployed, the `lwocrypt-provider` binary (shared library) thus adds support for quantum-safe cryptographic operations to any standard OpenSSL(v3) installation.
 
-In general, the oqs-provider `main` branch is meant to be useable in conjunction with the `main` branch of [liboqs](https://github.com/open-quantum-safe/liboqs) and the `master` branch of [OpenSSL](https://github.com/openssl/openssl).
+In general, the lwocrypt-provider `main` branch is meant to be useable in conjunction with the `main` branch of [liblwocrypt](https://github.com/open-quantum-safe/liblwocrypt) and the `master` branch of [OpenSSL](https://github.com/openssl/openssl).
 
-Further details on building, testing and use can be found in [README.md](https://github.com/open-quantum-safe/oqs-provider/blob/main/README.md). See in particular limitations on intended use.
+Further details on building, testing and use can be found in [README.md](https://github.com/open-quantum-safe/lwocrypt-provider/blob/main/README.md). See in particular limitations on intended use.
 
 Release notes
 =============
 
-This is version 0.5.1-dev of oqs-provider.
+This is version 0.5.1-dev of lwocrypt-provider.
 
 Security considerations
 -----------------------
@@ -30,7 +30,7 @@ What's New
 Previous Release Notes
 ======================
 
-This is version 0.5.0 of oqs-provider.
+This is version 0.5.0 of lwocrypt-provider.
 
 Security considerations
 -----------------------
@@ -40,25 +40,25 @@ None.
 What's New
 ----------
 
-This release continues from the 0.4.0 release of oqs-provider and is fully tested to be used in conjunction with the main branch of [liboqs](https://github.com/open-quantum-safe/liboqs). This release is guaranteed to be in sync with v0.8.0 of `liboqs`.
+This release continues from the 0.4.0 release of lwocrypt-provider and is fully tested to be used in conjunction with the main branch of [liblwocrypt](https://github.com/open-quantum-safe/liblwocrypt). This release is guaranteed to be in sync with v0.8.0 of `liblwocrypt`.
 
-oqs-provider now also enables use of QSC algorithms during TLS1.3 handshake. The required OpenSSL code updates are contained in https://github.com/openssl/openssl/pull/19312. Prior to this code merging, the functionality can be tested by using https://github.com/baentsch/openssl/tree/sigload.
+lwocrypt-provider now also enables use of QSC algorithms during TLS1.3 handshake. The required OpenSSL code updates are contained in https://github.com/openssl/openssl/pull/19312. Prior to this code merging, the functionality can be tested by using https://github.com/baentsch/openssl/tree/sigload.
 
 ### Algorithm updates
 
-All algorithms no longer supported in the [NIST PQC competition](https://csrc.nist.gov/projects/post-quantum-cryptography) and not under consideration for standardization by ISO have been removed. All remaining algorithms with the exception of McEliece have been lifted to their final round 3 variants as documented in [liboqs](https://github.com/open-quantum-safe/liboqs/blob/main/RELEASE.md#release-notes). Most notably, algorithm names for Sphincs+ have been changed to the naming chosen by its authors.
+All algorithms no longer supported in the [NIST PQC competition](https://csrc.nist.gov/projects/post-quantum-cryptography) and not under consideration for standardization by ISO have been removed. All remaining algorithms with the exception of McEliece have been lifted to their final round 3 variants as documented in [liblwocrypt](https://github.com/open-quantum-safe/liblwocrypt/blob/main/RELEASE.md#release-notes). Most notably, algorithm names for Sphincs+ have been changed to the naming chosen by its authors.
 
 ### Functional updates
 
-- Enablement of oqs-provider as a (first) dynamically fetchable OpenSSL3 TLS1.3 signature provider.
+- Enablement of lwocrypt-provider as a (first) dynamically fetchable OpenSSL3 TLS1.3 signature provider.
 - OSX support
 - Full support for CA functionality
-- Algorithms can now be selected by their respective bit strength using the property string "oqsprovider.security_bits"
-- Documentation of (O)IDs used by the different PQC algorithms used and supported in current and past releases of oqs-openssl and oqs-provider
+- Algorithms can now be selected by their respective bit strength using the property string "lwocryptprovider.security_bits"
+- Documentation of (O)IDs used by the different PQC algorithms used and supported in current and past releases of lwocrypt-openssl and lwocrypt-provider
 - Testing is now completely independent of a source code distribution of OpenSSL being available
-- oqsprovider can be built and installed making use of pre-existing installations of `OpenSSL` and `liboqs`. Details are found in the "scripts" directory's build and test scripts.
+- lwocryptprovider can be built and installed making use of pre-existing installations of `OpenSSL` and `liblwocrypt`. Details are found in the "scripts" directory's build and test scripts.
 - Automated creation of (Debian) packaging information
-- Graceful handling (by way of functional degradation) of the feature sets contained in different OpenSSL releases; all oqsprovider capabilities are only available when using a version > than OpenSSL3.1.
+- Graceful handling (by way of functional degradation) of the feature sets contained in different OpenSSL releases; all lwocryptprovider capabilities are only available when using a version > than OpenSSL3.1.
 - A bug regarding handling of hybrid algorithms has been fixed as well as some memory leaks.
 
 ### Misc updates
@@ -68,12 +68,12 @@ All algorithms no longer supported in the [NIST PQC competition](https://csrc.ni
 
 ---
 
-**Full Changelog**: https://github.com/open-quantum-safe/oqs-provider/compare/0.4.0...0.5.0.
+**Full Changelog**: https://github.com/open-quantum-safe/lwocrypt-provider/compare/0.4.0...0.5.0.
 
 Previous Release Notes
 ======================
 
-This is version 0.4.0 of oqs-provider.
+This is version 0.4.0 of lwocrypt-provider.
 
 Security considerations
 -----------------------
@@ -83,9 +83,9 @@ This release removes Rainbow level 1 and all variants of SIDH and SIKE due to cr
 What's New
 ----------
 
-This release continues from the 0.3.0 release of oqs-provider and is fully tested to be used in conjunction with version 0.7.2 of [liboqs](https://github.com/open-quantum-safe/liboqs). 
+This release continues from the 0.3.0 release of lwocrypt-provider and is fully tested to be used in conjunction with version 0.7.2 of [liblwocrypt](https://github.com/open-quantum-safe/liblwocrypt). 
 
-oqs-provider has been integrated as an external test component for [OpenSSL3 testing](https://github.com/openssl/openssl/blob/master/test/README-external.md#oqsprovider-test-suite) and will thus remain in line with any possibly required provider API enhancements.
+lwocrypt-provider has been integrated as an external test component for [OpenSSL3 testing](https://github.com/openssl/openssl/blob/master/test/README-external.md#lwocryptprovider-test-suite) and will thus remain in line with any possibly required provider API enhancements.
 
 ### Algorithm updates
 
@@ -103,6 +103,6 @@ oqs-provider has been integrated as an external test component for [OpenSSL3 tes
 
 ---
 
-**Full Changelog**: https://github.com/open-quantum-safe/oqs-provider/compare/0.3.0...0.4.0.
+**Full Changelog**: https://github.com/open-quantum-safe/lwocrypt-provider/compare/0.3.0...0.4.0.
 
 

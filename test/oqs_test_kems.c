@@ -4,13 +4,13 @@
 #include <openssl/provider.h>
 #include "test_common.h"
 #include <string.h>
-#include "oqs/oqs.h"
+#include "lwocrypt/lwocrypt.h"
 
 static OSSL_LIB_CTX *libctx = NULL;
 static char *modulename = NULL;
 static char *configfile = NULL;
 
-static int test_oqs_kems(const char *kemalg_name)
+static int test_lwocrypt_kems(const char *kemalg_name)
 {
   EVP_MD_CTX *mdctx = NULL;
   EVP_PKEY_CTX *ctx = NULL;
@@ -72,7 +72,7 @@ int main(int argc, char *argv[])
 {
   size_t i;
   int errcnt = 0, test = 0, query_nocache;
-  OSSL_PROVIDER *oqsprov = NULL;
+  OSSL_PROVIDER *lwocryptprov = NULL;
   const OSSL_ALGORITHM *kemalgs;
 
   T((libctx = OSSL_LIB_CTX_new()) != NULL);
@@ -83,12 +83,12 @@ int main(int argc, char *argv[])
   T(OSSL_LIB_CTX_load_config(libctx, configfile));
 
   T(OSSL_PROVIDER_available(libctx, modulename));
-  oqsprov = OSSL_PROVIDER_load(libctx, modulename);
+  lwocryptprov = OSSL_PROVIDER_load(libctx, modulename);
 
-  kemalgs = OSSL_PROVIDER_query_operation(oqsprov, OSSL_OP_KEM, &query_nocache);
+  kemalgs = OSSL_PROVIDER_query_operation(lwocryptprov, OSSL_OP_KEM, &query_nocache);
   if (kemalgs) {
       for (; kemalgs->algorithm_names != NULL; kemalgs++) {
-            if (test_oqs_kems(kemalgs->algorithm_names)) {
+            if (test_lwocrypt_kems(kemalgs->algorithm_names)) {
               fprintf(stderr,
                  cGREEN "  KEM test succeeded: %s" cNORM "\n",
                  kemalgs->algorithm_names);

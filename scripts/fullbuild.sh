@@ -1,14 +1,14 @@
 #!/bin/bash
 
 # The following variables influence the operation of this build script:
-# Argument -f: Soft clean, ensuring re-build of oqs-provider binary
+# Argument -f: Soft clean, ensuring re-build of lwocrypt-provider binary
 # Argument -F: Hard clean, ensuring checkout and build of all dependencies
 # EnvVar MAKE_PARAMS: passed to invocations of make; sample value: "-j"
-# EnvVar LIBOQS_BRANCH: Defines branch/release of liboqs; default value "main"
-# EnvVar OQS_ALGS_ENABLED: If set, defines OQS algs to be enabled, e.g., "STD"
+# EnvVar LIBLWOCRYPT_BRANCH: Defines branch/release of liblwocrypt; default value "main"
+# EnvVar LWOCRYPT_ALGS_ENABLED: If set, defines LWOCRYPT algs to be enabled, e.g., "STD"
 # EnvVar OPENSSL_INSTALL: If set, defines (binary) OpenSSL installation to use
 # EnvVar OPENSSL_BRANCH: Defines branch/release of openssl; if set, forces source-build of OpenSSL3
-# EnvVar liboqs_DIR: If set, needs to point to a directory where liboqs has been installed to
+# EnvVar liblwocrypt_DIR: If set, needs to point to a directory where liblwocrypt has been installed to
 
 if [[ "$OSTYPE" == "darwin"* ]]; then
    SHLIBEXT="dylib"
@@ -23,18 +23,18 @@ if [ $# -gt 0 ]; then
       rm -rf _build
    fi
    if [ "$1" == "-F" ]; then
-      rm -rf _build openssl liboqs .local
+      rm -rf _build openssl liblwocrypt .local
    fi
 fi
 
-if [ -z "$LIBOQS_BRANCH" ]; then
-   export LIBOQS_BRANCH=main
+if [ -z "$LIBLWOCRYPT_BRANCH" ]; then
+   export LIBLWOCRYPT_BRANCH=main
 fi
 
-if [ -z "$OQS_ALGS_ENABLED" ]; then
-   export DOQS_ALGS_ENABLED=""
+if [ -z "$LWOCRYPT_ALGS_ENABLED" ]; then
+   export DLWOCRYPT_ALGS_ENABLED=""
 else
-   export DOQS_ALGS_ENABLED="$OQS_ALGS_ENABLED"
+   export DLWOCRYPT_ALGS_ENABLED="$LWOCRYPT_ALGS_ENABLED"
 fi
 
 if [ -z "$OPENSSL_INSTALL" ]; then
@@ -59,26 +59,26 @@ if [ -z "$OPENSSL_INSTALL" ]; then
  fi
 fi
 
-# Check whether liboqs is built or has been configured:
-if [ -z $liboqs_DIR ]; then
- if [ ! -f ".local/lib/liboqs.$STATLIBEXT" ]; then
-  echo "need to re-build static liboqs..."
-  if [ ! -d liboqs ]; then
-    echo "cloning liboqs $LIBOQS_BRANCH..."
-    git clone --depth 1 --branch $LIBOQS_BRANCH https://github.com/open-quantum-safe/liboqs.git
+# Check whether liblwocrypt is built or has been configured:
+if [ -z $liblwocrypt_DIR ]; then
+ if [ ! -f ".local/lib/liblwocrypt.$STATLIBEXT" ]; then
+  echo "need to re-build static liblwocrypt..."
+  if [ ! -d liblwocrypt ]; then
+    echo "cloning liblwocrypt $LIBLWOCRYPT_BRANCH..."
+    git clone --depth 1 --branch $LIBLWOCRYPT_BRANCH https://github.com/open-quantum-safe/liblwocrypt.git
     if [ $? -ne 0 ]; then
-      echo "liboqs clone failure for branch $LIBOQS_BRANCH. Exiting."
+      echo "liblwocrypt clone failure for branch $LIBLWOCRYPT_BRANCH. Exiting."
       exit -1
     fi
-    if [ "$LIBOQS_BRANCH" != "main" ]; then
+    if [ "$LIBLWOCRYPT_BRANCH" != "main" ]; then
       # check for presence of backwards-compatibility generator file
-      if [ -f oqs-template/generate.yml-$LIBOQS_BRANCH ]; then
-        echo "generating code for $LIBOQS_BRANCH"
-        mv oqs-template/generate.yml oqs-template/generate.yml-main
-        cp oqs-template/generate.yml-$LIBOQS_BRANCH oqs-template/generate.yml
-        LIBOQS_SRC_DIR=`pwd`/liboqs python3 oqs-template/generate.py
+      if [ -f lwocrypt-template/generate.yml-$LIBLWOCRYPT_BRANCH ]; then
+        echo "generating code for $LIBLWOCRYPT_BRANCH"
+        mv lwocrypt-template/generate.yml lwocrypt-template/generate.yml-main
+        cp lwocrypt-template/generate.yml-$LIBLWOCRYPT_BRANCH lwocrypt-template/generate.yml
+        LIBLWOCRYPT_SRC_DIR=`pwd`/liblwocrypt python3 lwocrypt-template/generate.py
         if [ $? -ne 0 ]; then
-           echo "Code generation failure for $LIBOQS_BRANCH. Exiting."
+           echo "Code generation failure for $LIBLWOCRYPT_BRANCH. Exiting."
            exit -1
         fi
       fi
@@ -86,22 +86,22 @@ if [ -z $liboqs_DIR ]; then
   fi
 
   # for full debug build add: -DCMAKE_BUILD_TYPE=Debug
-  # to optimize for size add -DOQS_ALGS_ENABLED= suitably to one of these values:
+  # to optimize for size add -DLWOCRYPT_ALGS_ENABLED= suitably to one of these values:
   #    STD: only include NIST standardized algorithms
   #    NIST_R4: only include algorithms in round 4 of the NIST competition
-  #    All: include all algorithms supported by liboqs (default)
-  cd liboqs && cmake -GNinja $DOQS_ALGS_ENABLED -DCMAKE_INSTALL_PREFIX=$(pwd)/../.local -S . -B _build && cd _build && ninja && ninja install && cd ../..
+  #    All: include all algorithms supported by liblwocrypt (default)
+  cd liblwocrypt && cmake -GNinja $DLWOCRYPT_ALGS_ENABLED -DCMAKE_INSTALL_PREFIX=$(pwd)/../.local -S . -B _build && cd _build && ninja && ninja install && cd ../..
   if [ $? -ne 0 ]; then
-      echo "liboqs build failed. Exiting."
+      echo "liblwocrypt build failed. Exiting."
       exit -1
   fi
  fi
- export liboqs_DIR=$(pwd)/.local
+ export liblwocrypt_DIR=$(pwd)/.local
 fi
 
 # Check whether provider is built:
-if [ ! -f "_build/lib/oqsprovider.$SHLIBEXT" ]; then
-   echo "oqsprovider (_build/lib/oqsprovider.$SHLIBEXT) not built: Building..."
+if [ ! -f "_build/lib/lwocryptprovider.$SHLIBEXT" ]; then
+   echo "lwocryptprovider (_build/lib/lwocryptprovider.$SHLIBEXT) not built: Building..."
    # for full debug build add: -DCMAKE_BUILD_TYPE=Debug
    #BUILD_TYPE="-DCMAKE_BUILD_TYPE=Debug"
    BUILD_TYPE=""

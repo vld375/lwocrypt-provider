@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# Use newly built oqsprovider to generate CMS signed files for alg $1
-# Assumed oqsprovider-certgen.sh to have run before for same algorithm
+# Use newly built lwocryptprovider to generate CMS signed files for alg $1
+# Assumed lwocryptprovider-certgen.sh to have run before for same algorithm
 
 # uncomment to see what's happening:
 # set -x

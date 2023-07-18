@@ -15,7 +15,7 @@ jobs:
 #          - windows-2022
         platform:
           - arch: win64
-            oqsconfig: -DOQS_ALGS_ENABLED=STD
+            lwocryptconfig: -DLWOCRYPT_ALGS_ENABLED=STD
 #          - arch: win32
 #            config: --strict-warnings no-fips enable-quic
     runs-on: ${{matrix.os}}
@@ -33,13 +33,13 @@ jobs:
           set-safe-directory: true
           repository: openssl/openssl
           path: openssl
-      - name: checkout liboqs
+      - name: checkout liblwocrypt
         uses: actions/checkout@v3
         with:
           set-safe-directory: true
-          repository: open-quantum-safe/liboqs
+          repository: open-quantum-safe/liblwocrypt
           ref: main
-          path: liboqs
+          path: liblwocrypt
       - name: Install cygwin
         uses: cygwin/cygwin-install-action@master
         with:
@@ -53,17 +53,17 @@ jobs:
       - name: Set installpath
         run: |
            echo "IP=$(cygpath -u $PWD)/.local" >> "$env:GITHUB_ENV"
-      - name: build liboqs
+      - name: build liblwocrypt
         run: |
            which cmake
            cmake --version
            gcc --version
            mkdir _build
            cd _build
-           cmake -GNinja -DOPENSSL_ROOT_DIR=/opt/openssl32 -DCMAKE_INSTALL_PREFIX="${{ env.IP }}" ${{ matrix.platform.oqsconfig }} -DCMAKE_C_COMPILER=gcc ..
+           cmake -GNinja -DOPENSSL_ROOT_DIR=/opt/openssl32 -DCMAKE_INSTALL_PREFIX="${{ env.IP }}" ${{ matrix.platform.lwocryptconfig }} -DCMAKE_C_COMPILER=gcc ..
            ninja
            ninja install
-        working-directory: liboqs
+        working-directory: liblwocrypt
       - name: Build openssl3 if not cached
         if: steps.cache-openssl32.outputs.cache-hit != 'true'
         run: bash -c "./config --prefix=/opt/openssl32 ${{ matrix.platform.config }} && perl configdata.pm --dump && make $MAKE_PARAMS && make install_sw"
@@ -78,21 +78,21 @@ jobs:
           path: |
             c:\cygwin\opt\openssl32
           key: ${{ runner.os }}-cygwinopenssl32
-      - name: build oqs-provider
-        run: bash -c "git config --global --add safe.directory $(cygpath -u $PWD) && liboqs_DIR='${{ env.IP }}' cmake -GNinja -DCMAKE_C_COMPILER=gcc -DOPENSSL_ROOT_DIR=/opt/openssl32 -S . -B _build && cd _build && ninja && cd .."
-      - name: Adapt oqsprovider.dll name
-        run: bash -c "cp oqsprovider-1.dll oqsprovider.dll"
+      - name: build lwocrypt-provider
+        run: bash -c "git config --global --add safe.directory $(cygpath -u $PWD) && liblwocrypt_DIR='${{ env.IP }}' cmake -GNinja -DCMAKE_C_COMPILER=gcc -DOPENSSL_ROOT_DIR=/opt/openssl32 -S . -B _build && cd _build && ninja && cd .."
+      - name: Adapt lwocryptprovider.dll name
+        run: bash -c "cp lwocryptprovider-1.dll lwocryptprovider.dll"
         working-directory: _build/bin
       - name: Check Openssl providers
-        run: bash -c "OPENSSL_MODULES=_build/bin /opt/openssl32/bin/openssl list -providers -provider oqsprovider -provider default"
+        run: bash -c "OPENSSL_MODULES=_build/bin /opt/openssl32/bin/openssl list -providers -provider lwocryptprovider -provider default"
       - name: Run tests
         run: bash -c "echo $PATH && PATH=/opt/openssl32/bin:/usr/bin ctest -V"
         working-directory: _build
-      - name: Retain oqsprovider.dll
+      - name: Retain lwocryptprovider.dll
         uses: actions/upload-artifact@v3
         with:
-          name: oqs-provider-cygwin
-          path: D:/a/oqs-provider/oqs-provider/_build/bin/oqsprovider.dll
+          name: lwocrypt-provider-cygwin
+          path: D:/a/lwocrypt-provider/lwocrypt-provider/_build/bin/lwocryptprovider.dll
 
   msvc:
 # Run a job for each of the specified target architectures:
@@ -103,10 +103,10 @@ jobs:
 #          - windows-2022
         platform:
           - arch: win64
-            oqsconfig: -DOQS_ALGS_ENABLED=STD
+            lwocryptconfig: -DLWOCRYPT_ALGS_ENABLED=STD
             osslconfig: no-shared no-fips VC-WIN64A-masm
 #          - arch: win32
-#            oqsconfig: -DOQS_ALGS_ENABLED=STD
+#            lwocryptconfig: -DLWOCRYPT_ALGS_ENABLED=STD
 #            osslconfig: --strict-warnings no-fips enable-quic
     runs-on: ${{matrix.os}}
     steps:
@@ -127,8 +127,8 @@ jobs:
       - uses: actions/checkout@v3
         with:
           set-safe-directory: true
-          repository: open-quantum-safe/liboqs
-          path: liboqs
+          repository: open-quantum-safe/liblwocrypt
+          path: liblwocrypt
       - uses: ilammy/msvc-dev-cmd@v1
         with:
           arch: ${{ matrix.platform.arch }}
@@ -140,21 +140,21 @@ jobs:
       - name: Setup perl for OpenSSl build
         uses: shogo82148/actions-setup-perl@v1
         if: steps.cache-openssl32.outputs.cache-hit != 'true'
-# OQS_USE_OPENSSL=OFF by default on Win32
+# LWOCRYPT_USE_OPENSSL=OFF by default on Win32
 # if cmake --build fails, try explicit
 # cd _build && msbuild ALL_BUILD.vcxproj -p:Configuration=Release
-# fails:          cmake -DCMAKE_C_FLAGS="/wd5105" -DCMAKE_VERBOSE_MAKEFILE=ON -DCMAKE_INSTALL_PREFIX="c:\liboqs" ${{ matrix.platform.oqsconfig }} -S . -B _build
+# fails:          cmake -DCMAKE_C_FLAGS="/wd5105" -DCMAKE_VERBOSE_MAKEFILE=ON -DCMAKE_INSTALL_PREFIX="c:\liblwocrypt" ${{ matrix.platform.lwocryptconfig }} -S . -B _build
 #          cd _build && msbuild ALL_BUILD.vcxproj -p:Configuration=Release && cd ..
 #          cmake --install _build
-      - name: build liboqs
+      - name: build liblwocrypt
         run: |
           cmake --version
           mkdir build
           cd build
-          cmake -GNinja -DCMAKE_C_FLAGS="/wd5105" -DCMAKE_VERBOSE_MAKEFILE=ON -DCMAKE_INSTALL_PREFIX="c:\liboqs" ${{ matrix.platform.oqsconfig }} -DOQS_DIST_BUILD=ON ..
+          cmake -GNinja -DCMAKE_C_FLAGS="/wd5105" -DCMAKE_VERBOSE_MAKEFILE=ON -DCMAKE_INSTALL_PREFIX="c:\liblwocrypt" ${{ matrix.platform.lwocryptconfig }} -DLWOCRYPT_DIST_BUILD=ON ..
           ninja
           ninja install
-        working-directory: liboqs
+        working-directory: liblwocrypt
       - name: prepare the OpenSSL build directory
         if: steps.cache-openssl32.outputs.cache-hit != 'true'
         run: mkdir _build
@@ -188,17 +188,17 @@ jobs:
           path: |
             c:\openssl32
           key: ${{ runner.os }}-msvcopenssl32
-      - name: build oqs-provider
+      - name: build lwocrypt-provider
         run: |
-          cmake -GNinja -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_FLAGS="/wd5105" -DOPENSSL_ROOT_DIR="c:\openssl32" -Dliboqs_DIR="c:\liboqs\lib\cmake\liboqs" -S . -B _build
+          cmake -GNinja -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_FLAGS="/wd5105" -DOPENSSL_ROOT_DIR="c:\openssl32" -Dliblwocrypt_DIR="c:\liblwocrypt\lib\cmake\liblwocrypt" -S . -B _build
           cd _build
           ninja
       - name: Run tests
         run: |
           ctest -V --test-dir _build
-      - name: Retain oqsprovider.dll
+      - name: Retain lwocryptprovider.dll
         uses: actions/upload-artifact@v3
         with:
-          name: oqs-provider-msvc
-          path: D:/a/oqs-provider/oqs-provider/_build/bin/oqsprovider.dll
+          name: lwocrypt-provider-msvc
+          path: D:/a/lwocrypt-provider/lwocrypt-provider/_build/bin/lwocryptprovider.dll
 

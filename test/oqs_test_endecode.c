@@ -10,7 +10,7 @@
 #include "test_common.h"
 #include <openssl/core_names.h>
 #include <openssl/trace.h>
-#include "oqs/oqs.h"
+#include "lwocrypt/lwocrypt.h"
 
 static OSSL_LIB_CTX *libctx = NULL;
 static char *modulename = NULL;
@@ -49,7 +49,7 @@ static ENDECODE_PARAMS test_params_list[] = {
                                                                                          OSSL_KEYMGMT_SELECT_ALL_PARAMETERS},
 };
 
-static EVP_PKEY *oqstest_make_key(const char *type, EVP_PKEY *template,
+static EVP_PKEY *lwocrypttest_make_key(const char *type, EVP_PKEY *template,
                                   OSSL_PARAM *genparams) {
     EVP_PKEY *pkey = NULL;
     EVP_PKEY_CTX *ctx = NULL;
@@ -162,7 +162,7 @@ static int decode_EVP_PKEY_prov(const char *input_type, const char *structure, c
     return ok;
 }
 
-static int test_oqs_encdec(const char *sigalg_name) {
+static int test_lwocrypt_encdec(const char *sigalg_name) {
     EVP_PKEY *pkey = NULL;
     EVP_PKEY *decoded_pkey = NULL;
     void *encoded = NULL;
@@ -172,7 +172,7 @@ static int test_oqs_encdec(const char *sigalg_name) {
 
     for (i = 0; i < nelem(test_params_list); i++) {
 
-        pkey = oqstest_make_key(sigalg_name, NULL, NULL);
+        pkey = lwocrypttest_make_key(sigalg_name, NULL, NULL);
         if (pkey == NULL)
             goto end;
 
@@ -204,7 +204,7 @@ static int test_oqs_encdec(const char *sigalg_name) {
 int main(int argc, char *argv[]) {
     size_t i;
     int errcnt = 0, test = 0, query_nocache;
-    OSSL_PROVIDER *oqsprov = NULL;
+    OSSL_PROVIDER *lwocryptprov = NULL;
     const OSSL_ALGORITHM *sigalgs;
 
     T((libctx = OSSL_LIB_CTX_new()) != NULL);
@@ -220,13 +220,13 @@ int main(int argc, char *argv[]) {
     dfltprov = OSSL_PROVIDER_load(keyctx, "default");
     keyprov = OSSL_PROVIDER_load(keyctx, modulename);
 
-    oqsprov = OSSL_PROVIDER_load(libctx, modulename);
+    lwocryptprov = OSSL_PROVIDER_load(libctx, modulename);
 
-    sigalgs = OSSL_PROVIDER_query_operation(oqsprov, OSSL_OP_SIGNATURE, &query_nocache);
+    sigalgs = OSSL_PROVIDER_query_operation(lwocryptprov, OSSL_OP_SIGNATURE, &query_nocache);
 
     if (sigalgs) {
       for (; sigalgs->algorithm_names != NULL; sigalgs++) {
-        if (test_oqs_encdec(sigalgs->algorithm_names)) {
+        if (test_lwocrypt_encdec(sigalgs->algorithm_names)) {
             fprintf(stderr,
                     cGREEN "  Encoding/Decoding test succeeded: %s" cNORM "\n",
                     sigalgs->algorithm_names);
@@ -250,7 +250,7 @@ int main(int argc, char *argv[]) {
     OSSL_PROVIDER_unload(dfltprov);
     OSSL_PROVIDER_unload(keyprov);
     if (OPENSSL_VERSION_PREREQ(3,1))
-        OSSL_PROVIDER_unload(oqsprov); // avoid crash in 3.0.x
+        OSSL_PROVIDER_unload(lwocryptprov); // avoid crash in 3.0.x
     OSSL_LIB_CTX_free(keyctx);
 
     TEST_ASSERT(errcnt == 0)

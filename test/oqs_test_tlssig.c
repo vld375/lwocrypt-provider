@@ -19,7 +19,7 @@ static char *configfile = NULL;
 static char *certsdir = NULL;
 
 #ifdef OSSL_CAPABILITY_TLS_SIGALG_NAME
-static int test_oqs_tlssig(const char *sig_name)
+static int test_lwocrypt_tlssig(const char *sig_name)
 {
   SSL_CTX *cctx = NULL, *sctx = NULL;
   SSL *clientssl = NULL, *serverssl = NULL;
@@ -81,11 +81,11 @@ static int test_oqs_tlssig(const char *sig_name)
 }
 
 /* reactivate when EVP_SIGNATURE_do_all_provided doesn't crash any more:
-static void test_oqs_sigs(EVP_SIGNATURE *evpsig, void *vp) {
+static void test_lwocrypt_sigs(EVP_SIGNATURE *evpsig, void *vp) {
 	OSSL_PROVIDER* prov = EVP_SIGNATURE_get0_provider(evpsig);
-	if (!strcmp(OSSL_PROVIDER_get0_name(prov), "oqsprovider")) {
+	if (!strcmp(OSSL_PROVIDER_get0_name(prov), "lwocryptprovider")) {
 		printf("Commencing test of %s:\n", EVP_SIGNATURE_get0_name(evpsig));
-		test_oqs_tlssig(EVP_SIGNATURE_get0_name(evpsig)); 
+		test_lwocrypt_tlssig(EVP_SIGNATURE_get0_name(evpsig)); 
 	}
 }
 */
@@ -105,7 +105,7 @@ static int test_signature(const OSSL_PARAM params[], void *data)
 
     if (sigalg_name == NULL) return 0;
 
-    ret = test_oqs_tlssig(sigalg_name);
+    ret = test_lwocrypt_tlssig(sigalg_name);
 
     if (ret >= 0) {
         fprintf(stderr,
@@ -128,7 +128,7 @@ static int test_provider_signatures(OSSL_PROVIDER *provider, void *vctx)
 {
     const char* provname = OSSL_PROVIDER_get0_name(provider);
 
-    if (!strcmp(provname, PROVIDER_NAME_OQS))
+    if (!strcmp(provname, PROVIDER_NAME_LWOCRYPT))
         return OSSL_PROVIDER_get_capabilities(provider, "TLS-SIGALG",
                                               test_signature, vctx);
     else
@@ -159,7 +159,7 @@ int main(int argc, char *argv[])
   T(OSSL_PROVIDER_available(libctx, "default")); 
 
 #ifdef OSSL_CAPABILITY_TLS_SIGALG_NAME
-  // crashes: EVP_SIGNATURE_do_all_provided(libctx, test_oqs_sigs, &errcnt);
+  // crashes: EVP_SIGNATURE_do_all_provided(libctx, test_lwocrypt_sigs, &errcnt);
   OSSL_PROVIDER_do_all(libctx, test_provider_signatures, &errcnt);
 #else
   fprintf(stderr, "TLS-SIG handshake test not enabled. Update OpenSSL to more current version.\n");

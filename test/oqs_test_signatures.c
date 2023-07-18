@@ -3,7 +3,7 @@
 #include <openssl/evp.h>
 #include <openssl/provider.h>
 #include "test_common.h"
-#include "oqs/oqs.h"
+#include "lwocrypt/lwocrypt.h"
 
 static OSSL_LIB_CTX *libctx = NULL;
 static char *modulename = NULL;
@@ -15,7 +15,7 @@ static char *srpvfile = NULL;
 static char *tmpfilename = NULL;
 
 // sign-and-hash must work with and without providing a digest algorithm
-static int test_oqs_signatures(const char *sigalg_name)
+static int test_lwocrypt_signatures(const char *sigalg_name)
 {
   EVP_MD_CTX *mdctx = NULL;
   EVP_PKEY_CTX *ctx = NULL;
@@ -93,7 +93,7 @@ int main(int argc, char *argv[])
 {
   size_t i;
   int errcnt = 0, test = 0, query_nocache;
-  OSSL_PROVIDER *oqsprov = NULL;
+  OSSL_PROVIDER *lwocryptprov = NULL;
   const OSSL_ALGORITHM *sigalgs;
 
   T((libctx = OSSL_LIB_CTX_new()) != NULL);
@@ -104,12 +104,12 @@ int main(int argc, char *argv[])
   T(OSSL_LIB_CTX_load_config(libctx, configfile));
 
   T(OSSL_PROVIDER_available(libctx, modulename));
-  oqsprov = OSSL_PROVIDER_load(libctx, modulename);
+  lwocryptprov = OSSL_PROVIDER_load(libctx, modulename);
 
-  sigalgs = OSSL_PROVIDER_query_operation(oqsprov, OSSL_OP_SIGNATURE, &query_nocache);
+  sigalgs = OSSL_PROVIDER_query_operation(lwocryptprov, OSSL_OP_SIGNATURE, &query_nocache);
   if (sigalgs) {
       for (; sigalgs->algorithm_names != NULL; sigalgs++) {
-        if (test_oqs_signatures(sigalgs->algorithm_names)) {
+        if (test_lwocrypt_signatures(sigalgs->algorithm_names)) {
           fprintf(stderr,
                   cGREEN "  Signature test succeeded: %s" cNORM "\n",
                   sigalgs->algorithm_names);

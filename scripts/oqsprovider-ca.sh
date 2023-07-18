@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Test openssl CA functionality using oqsprovider for alg $1
+# Test openssl CA functionality using lwocryptprovider for alg $1
 
 if [ $# -ne 1 ]; then
     echo "Usage: $0 <algorithmname>. Exiting."
@@ -25,7 +25,7 @@ if [ -z "$DYLD_LIBRARY_PATH" ]; then
     export DYLD_LIBRARY_PATH=$LD_LIBRARY_PATH
 fi
 
-echo "oqsprovider-ca.sh commencing..."
+echo "lwocryptprovider-ca.sh commencing..."
 
 #rm -rf tmp
 mkdir -p tmp && cd tmp

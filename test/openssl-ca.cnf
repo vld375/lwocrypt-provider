@@ -56,8 +56,8 @@ providers = provider_sect
 # List of providers to load
 [provider_sect]
 default = default_sect
-oqsprovider = oqsprovider_sect
-oqsprovider2 = oqsprovider2_sect
+lwocryptprovider = lwocryptprovider_sect
+lwocryptprovider2 = lwocryptprovider2_sect
 
 # The fips section name should match the section name inside the
 # included fipsmodule.cnf.
@@ -74,12 +74,12 @@ oqsprovider2 = oqsprovider2_sect
 [default_sect]
 activate = 1
 
-[oqsprovider_sect]
+[lwocryptprovider_sect]
 activate = 1
 # This second provider instance can be activated (for testing) for example
-# by creating a softlink with suitable name "oqsprovider2" to the originally
-# created oqsprovider.{so|dylib|dll}
-[oqsprovider2_sect]
+# by creating a softlink with suitable name "lwocryptprovider2" to the originally
+# created lwocryptprovider.{so|dylib|dll}
+[lwocryptprovider2_sect]
 activate = 1
 
 # activate = 1
