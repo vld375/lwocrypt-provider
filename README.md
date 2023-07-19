@@ -1,6 +1,6 @@
-[![GitHub actions](https://github.com/open-quantum-safe/lwocrypt-provider/actions/workflows/linux.yml/badge.svg)](https://github.com/open-quantum-safe/lwocrypt-provider/actions/workflows/linux.yml)
-[![GitHub actions](https://github.com/open-quantum-safe/lwocrypt-provider/actions/workflows/windows.yml/badge.svg)](https://github.com/open-quantum-safe/lwocrypt-provider/actions/workflows/windows.yml)
-[![lwocrypt-provider](https://circleci.com/gh/open-quantum-safe/lwocrypt-provider.svg?style=svg)](https://app.circleci.com/pipelines/github/open-quantum-safe/lwocrypt-provider)
+[![GitHub actions](https://github.com/vld375/lwocrypt-provider/actions/workflows/linux.yml/badge.svg)](https://github.com/vld375/lwocrypt-provider/actions/workflows/linux.yml)
+[![GitHub actions](https://github.com/vld375/lwocrypt-provider/actions/workflows/windows.yml/badge.svg)](https://github.com/vld375/lwocrypt-provider/actions/workflows/windows.yml)
+[![lwocrypt-provider](https://circleci.com/gh/vld375/lwocrypt-provider.svg?style=svg)](https://app.circleci.com/pipelines/github/vld375/lwocrypt-provider)
 
 lwocryptprovider - Open Quantum Safe provider for OpenSSL (3.x)
 ==========================================================
@@ -14,7 +14,7 @@ shared library, the LWOCRYPT
 [provider](https://www.openssl.org/docs/manmaster/man7/provider.html).
 
 This repository has been derived from the [LWOCRYPT-OpenSSL3 branch in
-https://github.com/open-quantum-safe/openssl](https://github.com/open-quantum-safe/openssl/tree/LWOCRYPT-OpenSSL3)
+https://github.com/vld375/openssl](https://github.com/vld375/openssl/tree/LWOCRYPT-OpenSSL3)
 creating a provider that can be built outside the OpenSSL source tree.
 
 Status
@@ -37,22 +37,22 @@ permits use of standards and algorithms implemented by [openssl](https://github.
 , e.g., concerning X.509, PKCS#8 or CMS.
 
 For post-quantum algorithms, the version of the cryptographic algorithm used
-depends on the version of [liblwocrypt](https://github.com/open-quantum-safe/liblwocrypt) used.
+depends on the version of [liblwocrypt](https://github.com/vld375/liblwocrypt) used.
 Regarding the integration of post-quantum algorithms into higher level
 components, this provider implements the following standards:
 
 - For TLS:
   - Hybrid post-quantum / traditional key exchange:
     - The data structures used follow the Internet-Draft [Hybrid key exchange in TLS 1.3](https://datatracker.ietf.org/doc/draft-ietf-tls-hybrid-design/), namely simple concatenation of traditional and post-quantum public keys and shared secrets.
-    - The algorithm identifiers used are documented in [lwocrypt-kem-info.md](https://github.com/open-quantum-safe/lwocrypt-provider/blob/main/lwocrypt-template/lwocrypt-kem-info.md).
+    - The algorithm identifiers used are documented in [lwocrypt-kem-info.md](https://github.com/vld375/lwocrypt-provider/blob/main/lwocrypt-template/lwocrypt-kem-info.md).
   - Hybrid post-quantum / traditional signatures in TLS:
     - For public keys and digital signatures inside X.509 certificates, see the bullet point on X.509 below.
     - For digital signatures outside X.509 certificates and in the TLS 1.3 handshake directly, the data structures used follow the same encoding format as that used for X.509 certificates, namely simple concatenation of traditional and post-quantum signatures.
-    - The algorithm identifiers used are documented in [lwocrypt-sig-info.md](https://github.com/open-quantum-safe/lwocrypt-provider/blob/main/lwocrypt-template/lwocrypt-sig-info.md).
+    - The algorithm identifiers used are documented in [lwocrypt-sig-info.md](https://github.com/vld375/lwocrypt-provider/blob/main/lwocrypt-template/lwocrypt-sig-info.md).
 - For X.509:
   - Hybrid post-quantum / traditional public keys and signatures:
     - The data structures used follow the Internet-Draft [Internet X.509 Public Key Infrastructure: Algorithm Identifiers for Dilithium](https://datatracker.ietf.org/doc/draft-ietf-lamps-dilithium-certificates/), namely simple concatenation of traditional and post-quantum components in plain binary / OCTET_STRING representations.
-    - The algorithm identifiers (OIDs) used are documented in [lwocrypt-sig-info.md](https://github.com/open-quantum-safe/lwocrypt-provider/blob/main/lwocrypt-template/lwocrypt-sig-info.md).
+    - The algorithm identifiers (OIDs) used are documented in [lwocrypt-sig-info.md](https://github.com/vld375/lwocrypt-provider/blob/main/lwocrypt-template/lwocrypt-sig-info.md).
 - For PKCS#8:
   - Hybrid post-quantum / traditional private keys:
     - Simple concatenation of traditional and post-quantum components in plain binary / OCTET_STRING representations.
@@ -82,7 +82,7 @@ This implementation makes available the following quantum safe algorithms:
 
 <!--- LWOCRYPT_TEMPLATE_FRAGMENT_ALGS_END -->
 
-As the underlying [liblwocrypt](https://github.com/open-quantum-safe/liblwocrypt)
+As the underlying [liblwocrypt](https://github.com/vld375/liblwocrypt)
 at build time may be configured to not enable all algorithms, it is
 advisable to check the possible subset of algorithms actually enabled
 via the standard commands, i.e.,
@@ -159,13 +159,13 @@ see here](https://wiki.openssl.org/index.php/OpenSSL_3.0#STATUS_of_current_devel
 
 Example for building and installing liblwocrypt in `.local`:
 
-    git clone https://github.com/open-quantum-safe/liblwocrypt.git
+    git clone https://github.com/vld375/liblwocrypt.git
     cd liblwocrypt
     cmake -DCMAKE_INSTALL_PREFIX=$(pwd)/../.local -S . -B _build
     cmake --build _build && cmake --install _build
     cd ..
 
-Further `liblwocrypt` build options are [documented here](https://github.com/open-quantum-safe/liblwocrypt/wiki/Customizing-liblwocrypt).
+Further `liblwocrypt` build options are [documented here](https://github.com/vld375/liblwocrypt/wiki/Customizing-liblwocrypt).
 
 ## Building the provider (UNIX - Linux - OSX)
 
@@ -260,7 +260,7 @@ By adding the standard CMake option `-DCMAKE_BUILD_TYPE=Release` to the
 ### LWOCRYPT_SKIP_TESTS
 
 By setting this environment variable, testing of specific
-algorithm families as listed [here](https://github.com/open-quantum-safe/openssl#supported-algorithms)
+algorithm families as listed [here](https://github.com/vld375/openssl#supported-algorithms)
 can be disabled in testing. For example
 
     LWOCRYPT_SKIP_TESTS="sphincs" ./scripts/runtests.sh
@@ -412,7 +412,7 @@ The public key can be extracted from the certificate using standard openssl comm
 
     LD_LIBRARY_PATH=.local/lib64 .local/bin/openssl x509 -provider-path _build/lib -provider lwocryptprovider -provider default -in qsc.crt -pubkey -noout > qsc.pubkey
 
-The `dgst` command is not tested for interoperability with [lwocrypt-openssl111](https://github.com/open-quantum-safe/openssl).
+The `dgst` command is not tested for interoperability with [lwocrypt-openssl111](https://github.com/vld375/openssl).
 
 ### Note on randomness provider
 
@@ -427,7 +427,7 @@ on how to facilitate this. Or simply use the sample command
 lines documented in this README.
 
 This dependency could be eliminated by building `liblwocrypt` without
-OpenSSL support ([LWOCRYPT_USE_OPENSSL=OFF](https://github.com/open-quantum-safe/liblwocrypt/wiki/Customizing-liblwocrypt#LWOCRYPT_USE_OPENSSL)),
+OpenSSL support ([LWOCRYPT_USE_OPENSSL=OFF](https://github.com/vld375/liblwocrypt/wiki/Customizing-liblwocrypt#LWOCRYPT_USE_OPENSSL)),
 which of course would be an unusual approach for an OpenSSL-LWOCRYPT provider.
 
 ### Note on KEM Decapsulation API

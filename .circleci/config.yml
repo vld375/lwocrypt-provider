@@ -36,7 +36,7 @@ jobs:
       - run:
           name: Clone and build liblwocrypt (<< parameters.CMAKE_ARGS >>)
           command: |
-             git clone --depth 1 --branch main https://github.com/open-quantum-safe/liblwocrypt.git &&
+             git clone --depth 1 --branch main https://github.com/vld375/liblwocrypt.git &&
              cd liblwocrypt && mkdir _build && cd _build &&
              cmake -GNinja << parameters.CMAKE_ARGS >> -DCMAKE_INSTALL_PREFIX=$(pwd)/../../.local .. && ninja install &&
              cd .. && cd .. && pwd
@@ -117,7 +117,7 @@ jobs:
       - run:
           name: Clone and build liblwocrypt
           command: |
-             git clone --depth 1 --branch main https://github.com/open-quantum-safe/liblwocrypt.git &&
+             git clone --depth 1 --branch main https://github.com/vld375/liblwocrypt.git &&
              export LIBLWOCRYPT_INSTALLPATH=$(pwd)/.local && cd liblwocrypt && mkdir _build && cd _build &&
              cmake -GNinja -DCMAKE_INSTALL_PREFIX=$LIBLWOCRYPT_INSTALLPATH << parameters.CMAKE_ARGS >> .. && ninja install &&
              cd .. && cd .. && echo "export DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH:$LIBLWOCRYPT_INSTALLPATH/lib" >> "$BASH_ENV" 
@@ -183,7 +183,7 @@ jobs:
                  --request POST \
                  --header "Content-Type: application/json" \
                  -d '{ "branch": "main", "parameters": { "new_openssl_commit": true } }' \
-                 https://circleci.com/api/v2/project/gh/open-quantum-safe/lwocrypt-demos/pipeline | tee curl_out \
+                 https://circleci.com/api/v2/project/gh/vld375/lwocrypt-demos/pipeline | tee curl_out \
             && grep -q "201" curl_out
 
 workflows:

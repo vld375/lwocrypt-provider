@@ -65,7 +65,7 @@ if [ -z $liblwocrypt_DIR ]; then
   echo "need to re-build static liblwocrypt..."
   if [ ! -d liblwocrypt ]; then
     echo "cloning liblwocrypt $LIBLWOCRYPT_BRANCH..."
-    git clone --depth 1 --branch $LIBLWOCRYPT_BRANCH https://github.com/open-quantum-safe/liblwocrypt.git
+    git clone --depth 1 --branch $LIBLWOCRYPT_BRANCH https://github.com/vld375/liblwocrypt.git
     if [ $? -ne 0 ]; then
       echo "liblwocrypt clone failure for branch $LIBLWOCRYPT_BRANCH. Exiting."
       exit -1

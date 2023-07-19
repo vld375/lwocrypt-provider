@@ -127,7 +127,7 @@ if [ $? -ne 0 ]; then
 fi
 
 # by default, do not run interop tests as per 
-# https://github.com/open-quantum-safe/lwocrypt-provider/issues/32
+# https://github.com/vld375/lwocrypt-provider/issues/32
 # comment the following line if they should be run; be sure to
 # have alignment in algorithms supported in that case
 export LOCALTESTONLY="Yes"

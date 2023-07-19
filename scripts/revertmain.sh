@@ -3,7 +3,7 @@
 # This script reverts to a possibly set "main" code generator script
 
 if [ -f lwocrypt-template/generate.yml-main ]; then
-    rm -rf liblwocrypt && git clone --depth 1 --branch main https://github.com/open-quantum-safe/liblwocrypt.git
+    rm -rf liblwocrypt && git clone --depth 1 --branch main https://github.com/vld375/liblwocrypt.git
     mv lwocrypt-template/generate.yml-main lwocrypt-template/generate.yml
     LIBLWOCRYPT_SRC_DIR=`pwd`/liblwocrypt python3 lwocrypt-template/generate.py
     if [ $? -ne 0 ]; then

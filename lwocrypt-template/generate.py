@@ -10,7 +10,7 @@ import subprocess
 import yaml
 
 # For files generated, the copyright message can be adapted
-# see https://github.com/open-quantum-safe/lwocrypt-provider/issues/2#issuecomment-920904048
+# see https://github.com/vld375/lwocrypt-provider/issues/2#issuecomment-920904048
 # SPDX message to be leading, OpenSSL Copyright notice to be deleted
 def fixup_copyright(filename):
    with open(filename, "r") as origfile:
